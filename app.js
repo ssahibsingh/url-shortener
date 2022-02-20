@@ -12,7 +12,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('view engine', 'ejs');
 
 
-
 mongoose.connect(process.env.MONGOOSE_URI);
 
 const urlSchema = new mongoose.Schema({
@@ -23,13 +22,15 @@ const urlSchema = new mongoose.Schema({
 
 const URL = new mongoose.model('URL', urlSchema);
 
+var longURL;
+
 app.get('/', (req, res) => {
     res.render('index');
 })
 
 app.post('/', (req, res) => {
     const shortID = nanoid(10);
-    const longURL = req.body.longURL;
+    longURL = req.body.longURL;
     if (validURL.isUri(longURL)) {
         const newURL = new URL({
             longURL: longURL,
@@ -38,7 +39,7 @@ app.post('/', (req, res) => {
         })
         URL.findOne({ longURL: longURL }, function (err, result) {
             if (!err) {
-                if (result != null) {
+                if (result == null) {
                     newURL.save(function (error) {
                         if (error) {
                             console.log(error);
