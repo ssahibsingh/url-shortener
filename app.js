@@ -23,14 +23,17 @@ const urlSchema = new mongoose.Schema({
 const URL = new mongoose.model('URL', urlSchema);
 
 var longURL;
+var shortID;
+const error = "Server Error!! Please Try Again Later.";
 
 app.get('/', (req, res) => {
-    res.render('index');
+    res.render('index', {error: "", shortURL: ""});
 })
 
 app.post('/', (req, res) => {
-    const shortID = nanoid(10);
+    
     longURL = req.body.longURL;
+    
     if (validURL.isUri(longURL)) {
         const newURL = new URL({
             longURL: longURL,
@@ -40,28 +43,43 @@ app.post('/', (req, res) => {
         URL.findOne({ longURL: longURL }, function (err, result) {
             if (!err) {
                 if (result == null) {
-                    newURL.save(function (error) {
-                        if (error) {
-                            console.log(error);
+                    newURL.save(function (erro) {
+                        if (erro) {
+                            console.log(erro);
+                            res.redirect('/error');
                         }
-                        else{
-                            res.redirect('/');
+                        else {
+                            shortID = nanoid(10);
+                            res.redirect('/api');
                         }
                     })
                 }
-                else{
+                else {
                     console.log("Original URL already in Database");
+                    console.log(result.shortID);
+                    res.redirect('/api');
                 }
             }
-            else{
+            else {
                 console.log("Error Occured in Finding");
+                res.redirect('/error');
             }
         })
-
+        
     }
     else {
-        res.status(404).json("Invalid Original Url");
+        error = "Invalid URL";
+        res.redirect('/error');
     }
+})
+var shortURL = process.env.BASE_URI + '/' + shortID;
+
+app.get('/api', function (req, res) {
+    res.render('index', {shortURL: shortURL, error: ""});
+})
+
+app.get('/error', function (req, res) {
+    res.render('index', { error: error, shortURL: ""});
 })
 
 app.listen(process.env.PORT || 3000, () => {
