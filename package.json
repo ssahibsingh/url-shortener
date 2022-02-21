@@ -1,21 +1,22 @@
 {
-  "name": "url-shortner",
+  "name": "url-shortener",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ssahibsingh/url-shortner.git"
+    "url": "git+https://github.com/ssahibsingh/url-shortener.git"
   },
   "author": "Sahib Singh",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ssahibsingh/url-shortner/issues"
+    "url": "https://github.com/ssahibsingh/url-shortener/issues"
   },
-  "homepage": "https://github.com/ssahibsingh/url-shortner#readme",
+  "homepage": "https://github.com/ssahibsingh/url-shortener#readme",
   "dependencies": {
     "body-parser": "^1.19.2",
     "dotenv": "^16.0.0",
@@ -24,5 +25,8 @@
     "mongoose": "^6.2.2",
     "nanoid": "^3.3.1",
     "valid-url": "^1.0.9"
+  },
+  "engines": {
+    "node": "16.13.2"
   }
 }
