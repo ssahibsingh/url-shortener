@@ -22,22 +22,24 @@ const urlSchema = new mongoose.Schema({
 
 const URL = new mongoose.model('URL', urlSchema);
 
+console.log(process.env.BASE_URL);
+
 var longURL;
-var shortID;
-const error = "Server Error!! Please Try Again Later.";
+var error = "Server Error!! Please Try Again Later.";
 
 app.get('/', (req, res) => {
-    res.render('index', {error: "", shortURL: ""});
+    res.render('index', { error: "", shortURL: "" });
 })
 
 app.post('/', (req, res) => {
-    
+    const shortID = nanoid(10);
+
     longURL = req.body.longURL;
-    
+
     if (validURL.isUri(longURL)) {
         const newURL = new URL({
             longURL: longURL,
-            shortURL: process.env.BASE_URI + "/" + shortID,
+            shortURL: process.env.BASE_URL + "/" + shortID,
             shortID: shortID
         })
         URL.findOne({ longURL: longURL }, function (err, result) {
@@ -46,40 +48,43 @@ app.post('/', (req, res) => {
                     newURL.save(function (erro) {
                         if (erro) {
                             console.log(erro);
-                            res.redirect('/error');
+                            res.render('index', { error: error, shortURL: "" });
                         }
                         else {
-                            shortID = nanoid(10);
-                            res.redirect('/api');
+                            displayShortURL(req, res);
                         }
                     })
                 }
                 else {
                     console.log("Original URL already in Database");
-                    console.log(result.shortID);
                     res.redirect('/api');
                 }
             }
             else {
                 console.log("Error Occured in Finding");
-                res.redirect('/error');
+                res.render('index', { error: error, shortURL: "" });
             }
         })
-        
     }
     else {
         error = "Invalid URL";
-        res.redirect('/error');
+        res.render('index', { error: error, shortURL: "" });
     }
 })
-var shortURL = process.env.BASE_URI + '/' + shortID;
 
-app.get('/api', function (req, res) {
-    res.render('index', {shortURL: shortURL, error: ""});
-})
+function displayShortURL(req, res) {
+    URL.findOne({ longURL: longURL }, function (err, result) {
+        if (!err) {
+            res.render('index', { shortURL: result.shortURL, error: "" });
+        }
+    })
+}
 
-app.get('/error', function (req, res) {
-    res.render('index', { error: error, shortURL: ""});
+app.get('/:shortID', async (req, res) => {
+    const result = await URL.findOne({ shortID: req.params.shortID })
+    if (result == null) return res.sendStatus(404)
+
+    res.redirect(result.longURL);
 })
 
 app.listen(process.env.PORT || 3000, () => {
