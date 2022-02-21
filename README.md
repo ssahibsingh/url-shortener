@@ -4,7 +4,7 @@
 A URL Shortener made with the help of Node.js and MongoDB as Database.
 ## Demo
 
-https://ss-url-shortener.herokuapp.com/
+https://exn.herokuapp.com/
 
 
 ## Features
