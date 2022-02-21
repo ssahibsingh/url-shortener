@@ -22,13 +22,11 @@ const urlSchema = new mongoose.Schema({
 
 const URL = new mongoose.model('URL', urlSchema);
 
-console.log(process.env.BASE_URL);
-
 var longURL;
 var error = "Server Error!! Please Try Again Later.";
 
 app.get('/', (req, res) => {
-    res.render('index', { error: "", shortURL: "" });
+    res.render('index', { error: "", shortURL: "", shortID: "" });
 })
 
 app.post('/', (req, res) => {
@@ -47,8 +45,8 @@ app.post('/', (req, res) => {
                 if (result == null) {
                     newURL.save(function (erro) {
                         if (erro) {
-                            console.log(erro);
-                            res.render('index', { error: error, shortURL: "" });
+                            // console.log(erro);
+                            res.render('index', { error: error, shortID: "", shortURL: "" });
                         }
                         else {
                             displayShortURL(req, res);
@@ -56,26 +54,27 @@ app.post('/', (req, res) => {
                     })
                 }
                 else {
-                    console.log("Original URL already in Database");
-                    res.redirect('/api');
+                    // console.log("Original URL already in Database");
+                    // res.redirect('/api');
+                    displayShortURL(req, res);
                 }
             }
             else {
-                console.log("Error Occured in Finding");
-                res.render('index', { error: error, shortURL: "" });
+                // console.log("Error Occured in Finding");
+                res.render('index', { error: error, shortURL: "", shortID: "" });
             }
         })
     }
     else {
         error = "Invalid URL";
-        res.render('index', { error: error, shortURL: "" });
+        res.render('index', { error: error, shortURL: "", shortID: "" });
     }
 })
 
 function displayShortURL(req, res) {
     URL.findOne({ longURL: longURL }, function (err, result) {
         if (!err) {
-            res.render('index', { shortURL: result.shortURL, error: "" });
+            res.render('index', { shortURL: result.shortURL, error: "", shortID: result.shortID });
         }
     })
 }
