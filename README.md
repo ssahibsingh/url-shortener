@@ -10,6 +10,7 @@ https://exn.herokuapp.com/
 ## Features
 
 - Shorten Your URLs Easily
+- Add Custom Alias
 
 
 
