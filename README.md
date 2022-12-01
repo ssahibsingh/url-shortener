@@ -4,7 +4,7 @@
 A URL Shortener made with the help of Node.js and MongoDB as Database.
 ## Demo
 
-https://exn.herokuapp.com/
+https://exn.up.railway.app/
 
 
 ## Features
@@ -59,4 +59,5 @@ To run this project, you will need to add the following environment variables to
 - [EJS](https://ejs.co/#docs)
 - [Mongoose](https://mongoosejs.com/docs/guide.html)
 - [Heroku Node.js](https://devcenter.heroku.com/categories/nodejs-support)
+- [Railways Node.js](https://docs.railway.app/deploy/builds)
 
